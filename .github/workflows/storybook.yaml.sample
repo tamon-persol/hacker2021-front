@@ -1,0 +1,59 @@
+name:
+  srl-frontend-storybook
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'components/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10]
+
+    steps:
+      # リポジトリのチェックアウト
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      # Nodeランタイムの準備
+      - name: Prepare Node Env
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # gcloudコマンドの準備
+      - name: Prepare gcloud CLI
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: latest
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.TEMPLATE_GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # 依存関係のインストール
+      - name: Install Dependencies
+        run: yarn
+
+      # storybookのexport
+      - name: Build Storybook
+        run: yarn storybook:build
+
+      # storybookのdeploy
+      - name: Deploy Storybook
+        run: yarn storybook:deploy:ci
+        env:
+          PROJECT_ID: ${{ secrets.TEMPLATE_GCP_PROJECT_ID }}
+
+      # Slackへの通知
+      # https://persol-service-dev.slack.com/archives/C013KNC22P7（#pj_サラリーリサーチ_更新通知）に通知されます
+      - name: Slack Notification
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"C013KNC22P7\",\"text\":\"Storybookが更新されました！！ \n https:\/\/srl-storybook-dot-dev-pca-template.an.r.appspot.com\"}'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

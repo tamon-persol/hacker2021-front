@@ -3,7 +3,7 @@ import React from 'react';
 import { Location } from 'modules/domains/models/Itinerary';
 
 export type PolylineOverlayType = {
-  points: Location[];
+  points: number[][];
   color?: string;
   lineWidth?: number;
   renderWhileDragging?: boolean;
@@ -29,7 +29,7 @@ const PolylineOverlay = (props: PolylineOverlayType) => {
       context.beginPath();
       points.forEach((point) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
-        const pixel = project([point.long, point.lat]);
+        const pixel = project([point[0], point[1]]);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         context.lineTo(pixel[0], pixel[1]);
       });

@@ -1,22 +1,29 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MapComponent } from 'components/MapComponent/MapComponent';
 import { Repository } from 'modules/domains/Repository';
-import { Itinerary, Location } from 'modules/domains/models/Itinerary';
+import {
+  Itinerary,
+  ItineraryService,
+  Location
+} from 'modules/domains/models/Itinerary';
 
 const Home = (): JSX.Element => {
   const [state, setState] = useState<Itinerary>({
     markers: [],
-    routes: []
+    points: []
   });
   const [loading, setLoading] = useState(true);
 
   const fetchMyAPI = useCallback(async () => {
     setLoading(true);
 
-    const repo = new Repository();
-    const { data } = await repo.getItinerary(1);
+    const service = new ItineraryService();
 
-    setState(data);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const result = await service.getLocation(1);
+
+    console.log(result);
+    setState(result);
     setLoading(false);
   }, []);
 
@@ -25,11 +32,7 @@ const Home = (): JSX.Element => {
     fetchMyAPI();
   }, [fetchMyAPI]);
 
-  return (
-    <div>
-      {!loading ? <MapComponent routes={state.routes} /> : null}
-    </div>
-  );
+  return <div>{!loading ? <MapComponent itinerary={state} /> : null}</div>;
 };
 
 export default Home;

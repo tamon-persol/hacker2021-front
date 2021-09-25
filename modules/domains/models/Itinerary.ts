@@ -3,9 +3,11 @@ import { Repository } from 'modules/domains/Repository';
 export type Itinerary = {
   markers: Marker[];
   routes: Location[];
-  points: number[];
+  points: Point[];
 };
-
+export type Point = {
+  points: [][];
+};
 export type Marker = {
   name: string;
   type: string; // Grower | Batch | Producer | Brew | Venues
@@ -23,7 +25,7 @@ export class ItineraryService {
     const { data } = await repo.getItinerary(id);
     const promises = [];
     let i = data.markers.length - 1;
-
+    console.log(data);
     while (i > 0) {
       promises.push(
         repo.getGeoJsonBetweenTwoPoint(

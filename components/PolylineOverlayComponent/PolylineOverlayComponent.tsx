@@ -1,6 +1,5 @@
 import { CanvasOverlay } from 'react-map-gl';
 import React from 'react';
-import { Location } from 'modules/domains/models/Itinerary';
 
 export type PolylineOverlayType = {
   points: number[][];
@@ -8,10 +7,18 @@ export type PolylineOverlayType = {
   lineWidth?: number;
   renderWhileDragging?: boolean;
 };
+export type OverlayType = {
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  project: (array: number[]) => number[];
+  isDragging: boolean;
+};
 
 const PolylineOverlay = (props: PolylineOverlayType) => {
-  // @ts-ignore
-  const handleRedraw = ({ width, height, ctx, isDragging, project }) => {
+  const handleRedraw = (e: OverlayType) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { width, height, ctx, isDragging, project } = e;
     const {
       points,
       color = 'red',
@@ -19,7 +26,7 @@ const PolylineOverlay = (props: PolylineOverlayType) => {
       renderWhileDragging = true
     } = props;
 
-    const context = ctx as CanvasRenderingContext2D;
+    const context = ctx;
     context.clearRect(0, 0, width, height);
     context.globalCompositeOperation = 'lighter';
 
@@ -28,9 +35,7 @@ const PolylineOverlay = (props: PolylineOverlayType) => {
       context.strokeStyle = color;
       context.beginPath();
       points.forEach((point) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
         const pixel = project([point[0], point[1]]);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         context.lineTo(pixel[0], pixel[1]);
       });
       context.stroke();

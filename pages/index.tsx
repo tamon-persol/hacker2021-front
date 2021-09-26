@@ -17,6 +17,7 @@ const Home = (): JSX.Element => {
   });
   const [loading, setLoading] = useState(true);
   const [isScan, setIsScan] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchMyAPI = useCallback(async () => {
     setLoading(true);
@@ -39,7 +40,13 @@ const Home = (): JSX.Element => {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const result = await service.getLocation(e);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (!result.markers) {
+        setError('no found');
+        return;
+      }
 
+      setError('');
       setIsScan(true);
       setState(result);
       setLoading(false);
@@ -47,7 +54,12 @@ const Home = (): JSX.Element => {
   };
 
   if (!isScan) {
-    return <QrScannerComponent handleScan={handleScan} />;
+    return (
+      <div>
+        <QrScannerComponent handleScan={handleScan} />
+        <h2 style={{ color: 'red' }}>{error}</h2>
+      </div>
+    );
   }
   return (
     <div>

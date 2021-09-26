@@ -65,7 +65,7 @@ export const MapComponent = (props: MapComponentProps) => {
       height: '60vh',
       latitude: props.itinerary.markers[0].location.lat,
       longitude: props.itinerary.markers[0].location.long,
-      zoom: props.zoom || 9
+      zoom: props.zoom || 11
     }
   });
 

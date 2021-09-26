@@ -7,7 +7,7 @@ import {
   Location
 } from 'modules/domains/models/Itinerary';
 import QrScannerComponent from 'components/QRScannerComponent';
-import { Backdrop, CircularProgress } from '@material-ui/core';
+import { Backdrop, Button, CircularProgress } from '@material-ui/core';
 
 const Home = (): JSX.Element => {
   const [state, setState] = useState<Itinerary>({
@@ -45,13 +45,34 @@ const Home = (): JSX.Element => {
       setLoading(false);
     }
   };
+
   if (!isScan) {
     return <QrScannerComponent handleScan={handleScan} />;
   }
   return (
     <div>
+      <h1 style={{ textAlign: 'center' }}>Comet</h1>
       {!loading ? (
-        <MapComponent itinerary={state} />
+        <div>
+          <MapComponent itinerary={state} />
+          <div>
+            {state.markers.map((marker, i) => (
+              <div key={i}>
+                actor: {marker.type} | name: {marker.name}
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', placeItems: 'center' }}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setIsScan(false);
+              }}
+            >
+              Scan QR
+            </Button>
+          </div>
+        </div>
       ) : (
         <Backdrop sx={{ color: '#fff' }}>
           <CircularProgress color="inherit" />

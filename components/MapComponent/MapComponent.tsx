@@ -61,8 +61,8 @@ export type MapComponentProps = {
 export const MapComponent = (props: MapComponentProps) => {
   const [state, setState] = useState<State>({
     viewport: {
-      width: '80vw',
-      height: '80vh',
+      width: '100vw',
+      height: '60vh',
       latitude: props.itinerary.markers[0].location.lat,
       longitude: props.itinerary.markers[0].location.long,
       zoom: props.zoom || 9
@@ -118,7 +118,7 @@ export const MapComponent = (props: MapComponentProps) => {
   };
 
   return (
-    <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'grid', placeItems: 'center', margin: '32px 0' }}>
       <ReactMapGl
         {...state.viewport}
         onViewportChange={(viewport: ViewPortType) => {

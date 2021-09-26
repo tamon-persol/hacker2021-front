@@ -23,9 +23,13 @@ export class ItineraryService {
   async getLocation(id: string): Promise<any> {
     const repo = new Repository();
     const { data } = await repo.getItinerary(id);
+    data.markers.forEach(m => {
+      m.location = { long: m.location[0], lat: m.location[1] }
+    });
+    data.routes = data.routes.map(r => ({ long: r[0], lat: r[1] }));
+    console.log('data', data);
     const promises = [];
     let i = data.markers.length - 1;
-    console.log(data);
     while (i > 0) {
       promises.push(
         repo.getGeoJsonBetweenTwoPoint(
@@ -36,6 +40,7 @@ export class ItineraryService {
       i--;
     }
     const result = await Promise.all(promises);
+    console.log('result', result);
     const points = result.map((itinerary) => ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
       points: itinerary.data.routes[0].geometry.coordinates

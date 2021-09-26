@@ -63,7 +63,7 @@ const Home = (): JSX.Element => {
   }
   return (
     <div>
-      <h1 style={{ textAlign: 'center' }}>Comet</h1>
+      <h1 style={{ textAlign: 'center' }}>Comect</h1>
       {!loading ? (
         <div>
           <MapComponent itinerary={state} />

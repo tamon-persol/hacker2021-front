@@ -20,7 +20,7 @@ export type Location = {
 };
 
 export class ItineraryService {
-  async getLocation(id: number): Promise<any> {
+  async getLocation(id: string): Promise<any> {
     const repo = new Repository();
     const { data } = await repo.getItinerary(id);
     const promises = [];

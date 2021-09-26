@@ -31,7 +31,7 @@ const Home = (): JSX.Element => {
     setLoading(false);
   }, []);
 
-  const handleScan = async (e: number | string) => {
+  const handleScan = async (e: string) => {
     if (e !== null) {
       setLoading(true);
 

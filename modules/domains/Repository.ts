@@ -13,7 +13,7 @@ const repository = axios.create({
 });
 
 export class Repository {
-  async getItinerary(id: number): Promise<AxiosResponse<Itinerary>> {
+  async getItinerary(id: string): Promise<AxiosResponse<Itinerary>> {
     return repository.get(`${baseURL}/itinerary`, { params: { id: id } });
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
